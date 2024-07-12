@@ -6,19 +6,24 @@ import { format } from 'date-fns'
 import "react-day-picker/dist/style.css";
 
 interface DestinationAndDateStepProps {
-    isGuestInputOpen: boolean
-    closeGuestInput: () => void
-    openGuestInput: () => void
+    isGuestsInputOpen: boolean
+    eventStartAndEndDates: DateRange | undefined
+    closeGuestsInput: () => void
+    openGuestsInput: () => void
+    setDestination: (destination: string) => void
+    setEventStartAndEndDates: (dates: DateRange | undefined) => void
 }
 
 export function DestinationAndDateStep({
-    closeGuestInput,
-    isGuestInputOpen,
-    openGuestInput
+    closeGuestsInput,
+    isGuestsInputOpen,
+    openGuestsInput,
+    setDestination,
+    eventStartAndEndDates,
+    setEventStartAndEndDates,
 }: DestinationAndDateStepProps) {
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-    const [eventStartAndEndDates, setEventStartAndEndDates] = useState<DateRange | undefined>()
-
+    
     function openDatePicker() {
         return setIsDatePickerOpen(true)
     }
@@ -35,10 +40,15 @@ export function DestinationAndDateStep({
         <div className="h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
             <div className='flex items-center gap-2 flex-1'>
                 <MapPin className="size-5 text-zinc-400" />
-                <input disabled={isGuestInputOpen} type="text" placeholder="para onde você vai?" className="bg-transparent text-lg placeholder:-zinc-400 outline-none flex-1" />
+                <input
+                    disabled={isGuestsInputOpen}
+                    type="text" placeholder="para onde você vai?"
+                    className="bg-transparent text-lg placeholder:-zinc-400 outline-none flex-1"
+                    onChange={event => setDestination(event.target.value)}
+                />
             </div>
 
-            <button onClick={openDatePicker} disabled={isGuestInputOpen} className='flex items-center gap-2 text-left w-[240px]'>
+            <button onClick={openDatePicker} disabled={isGuestsInputOpen} className='flex items-center gap-2 text-left w-[240px]'>
                 <Calendar className="size-5 text-zinc-400 " />
                 <span className="bg-transparent text-lg text-zinc-400  w-40 outline-none flex-1">
                     {displayedDate || "Quando?"}
@@ -64,14 +74,14 @@ export function DestinationAndDateStep({
 
             <div className='w-px h-6 bg-zinc-800' />
 
-            {isGuestInputOpen ? (
-                <Button onClick={closeGuestInput} variant="secondary">
+            {isGuestsInputOpen ? (
+                <Button onClick={closeGuestsInput} variant="secondary">
                     <Settings2 className='size-5' />
                     Alterar local/data
                 </Button>
             ) : (
 
-                <Button onClick={openGuestInput} variant="primary">
+                <Button onClick={openGuestsInput} variant="primary">
                     <ArrowRight className="size-5" />
                     Continuar
                 </Button>
