@@ -107,6 +107,8 @@ export function CreateTripPage() {
     navigate(`/trips/${tripId}`)
   }
 
+
+
   return (
     <div className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
       <div className="max-w-3xl w-full px-6 text-center space-y-10">
@@ -118,7 +120,7 @@ export function CreateTripPage() {
         </div>
 
         <div className="space-y-4">
-          <DestinationAndDateStep 
+          <DestinationAndDateStep
             closeGuestsInput={closeGuestsInput}
             isGuestsInputOpen={isGuestsInputOpen}
             openGuestsInput={openGuestsInput}
@@ -128,7 +130,7 @@ export function CreateTripPage() {
           />
 
           {isGuestsInputOpen && (
-            <InviteGuestsStep 
+            <InviteGuestsStep
               emailsToInvite={emailsToInvite}
               openConfirmTripModal={openConfirmTripModal}
               openGuestsModal={openGuestsModal}
@@ -143,7 +145,7 @@ export function CreateTripPage() {
       </div>
 
       {isGuestsModalOpen && (
-        <InviteGuestsModal 
+        <InviteGuestsModal
           emailsToInvite={emailsToInvite}
           addNewEmailToInvite={addNewEmailToInvite}
           closeGuestsModal={closeGuestsModal}
@@ -152,7 +154,7 @@ export function CreateTripPage() {
       )}
 
       {isConfirmTripModalOpen && (
-        <ConfirmTripModal 
+        <ConfirmTripModal
           closeConfirmTripModal={closeConfirmTripModal}
           createTrip={createTrip}
           setOwnerName={setOwnerName}
