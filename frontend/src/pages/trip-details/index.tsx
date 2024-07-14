@@ -17,6 +17,7 @@ export function TripDetailsPage() {
     function closeCreateActivityModalOpen() {
         setIsCreateActivityModalOpen(false)
     }
+    
 
     return (
         <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -48,6 +49,8 @@ export function TripDetailsPage() {
                     closeCreateActivityModalOpen={closeCreateActivityModalOpen}
                 />
             )}
+
+
         </div>
     )
 }
