@@ -6,6 +6,7 @@ import { DestinationAndDateStep } from "./steps/destination-end-date-step";
 import { InviteGuestsStep } from "./steps/invite-guests-step";
 import { DateRange } from "react-day-picker";
 import { api } from "../../lib/axios";
+import { format } from "date-fns";
 
 export function CreateTripPage() {
   const navigate = useNavigate()
@@ -107,6 +108,9 @@ export function CreateTripPage() {
     navigate(`/trips/${tripId}`)
   }
 
+  const displayedDate = eventStartAndEndDates && eventStartAndEndDates.from && eventStartAndEndDates.to
+    ? format(eventStartAndEndDates.from, "d' de 'LLL").concat(' até ').concat(format(eventStartAndEndDates.to, "d' de 'LLL"))
+    : "";
 
 
   return (
@@ -159,6 +163,8 @@ export function CreateTripPage() {
           createTrip={createTrip}
           setOwnerName={setOwnerName}
           setOwnerEmail={setOwnerEmail}
+          destination={destination}
+          dates={displayedDate}
         />
       )}
     </div>
