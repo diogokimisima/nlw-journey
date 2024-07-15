@@ -1,34 +1,29 @@
-import {  Link, Plus, Tag, X } from "lucide-react";
+import { CheckCircle2, CircleDashed, UserRoundPlus, X } from "lucide-react";
 import { Button } from "../../components/button";
 import { api } from "../../lib/axios";
 import { useParams } from "react-router-dom";
-import { FormEvent } from "react";
+import { useEffect, useState } from "react";
 
 interface UpdateGuestModalProps {
     closeUpdateGuestsModalOpen: () => void
+}
+interface Participant {
+    id: string
+    name: string | null
+    email: string
+    is_confirmed: boolean
 }
 
 export function UpdateGuestModal({
     closeUpdateGuestsModalOpen
 }: UpdateGuestModalProps) {
-
+    const [participants, setParticipants] = useState<Participant[]>([])
     const { tripId } = useParams()
 
-    async function createLink(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault()  
+    useEffect(() => {
+        api.get(`/trips/${tripId}/participants`).then(response => setParticipants(response.data.participants))
 
-        const data = new FormData(event.currentTarget)
-
-        const title = data.get('title')?.toString()
-        const url = data.get('url')?.toString()
-
-        await api.post(`/trips/${tripId}/links`, {
-            title,
-            url,
-        })
-
-        window.document.location.reload()
-    }
+    }, [tripId])
 
 
     return (
@@ -36,7 +31,7 @@ export function UpdateGuestModal({
             <div className='w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5'>
                 <div className='space-y-2'>
                     <div className='flex items-center justify-between'>
-                        <h2 className='text-lg font-semibold'>Cadastrar novo Link</h2>
+                        <h2 className='text-lg font-semibold'>Gerenciar convidados</h2>
                         <button onClick={closeUpdateGuestsModalOpen}>
                             <X className='size-5 text-zinc-400' />
                         </button>
@@ -47,28 +42,32 @@ export function UpdateGuestModal({
                 </div>
                 <div className='w-full h-px bg-zinc-800'></div>
 
-                <form onSubmit={createLink} className='space-y-3'>
-                    <div className='h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2'>
-                        <Tag className='text-zinc-400 size-5' />
-                        <input
-                            name='title'
-                            placeholder="Titulo"
-                            className="bg-transparent text-lg placeholder:-zinc-400 outline-none flex-1"
-                        />
+                <form className='space-y-3'>
+                    <div className="space-y-5">
+                        {participants.map((participants, index) => {
+                            return (
+                                <div key={participants.id} className="flex items-center justify-between gap-4">
+                                    <div className="space-y-1.5 flex-1">
+                                        <span className="block font-medium text-zinc-100">{participants.name ?? `Convidado ${index}`}</span>
+                                        <span className="block text-sm text-zinc-400 truncate">
+                                            {participants.email}
+                                        </span>
+                                    </div>
+                                    {participants.is_confirmed ? (
+                                        <CheckCircle2 className="size-5 text-green-400" />
+                                    ) : (
+                                        <CircleDashed className="size-5 text-zinc-400" />
+                                    )}
+                                </div>
+                            )
+                        })}
                     </div>
-                    <div className='h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2'>
-                        <Link className='text-zinc-400 size-5' />
-                        <input
-                            name='url'
-                            placeholder="Link"
-                            className="bg-transparent text-lg placeholder:-zinc-400 outline-none flex-1"
-                        />
-                    </div>
+
 
 
                     <Button size="full">
-                        <Plus />
-                        Novo Link
+                        <UserRoundPlus />
+                        Salvar Alterações
                     </Button>
                 </form>
             </div>
