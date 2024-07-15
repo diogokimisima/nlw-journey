@@ -1,8 +1,9 @@
-import {  CheckCircle2, CircleDashed, UserCog } from "lucide-react";
+import { CheckCircle2, CircleDashed, UserCog } from "lucide-react";
 import { Button } from "../../components/button";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api } from "../../lib/axios";
+import { UpdateGuestModal } from "./update-guests-modal";
 
 interface Participant {
     id: string
@@ -14,6 +15,15 @@ interface Participant {
 export function Guests() {
     const { tripId } = useParams()
     const [participants, setParticipants] = useState<Participant[]>([])
+    const [isUpdateGuestModalOpen, setIsUpdateGuestModalOpen] = useState(false)
+
+    function openUpdateGuestsModalOpen() {
+        setIsUpdateGuestModalOpen(true)
+    }
+
+    function closeUpdateGuestsModalOpen() {
+        setIsUpdateGuestModalOpen(false)
+    }
 
     useEffect(() => {
         api.get(`/trips/${tripId}/participants`).then(response => setParticipants(response.data.participants))
@@ -34,18 +44,24 @@ export function Guests() {
                                 </span>
                             </div>
                             {participants.is_confirmed ? (
-                                <CheckCircle2 className="size-5 text-green-400"/>
-                            ): (
-                                    <CircleDashed className = "size-5 text-zinc-400" />
+                                <CheckCircle2 className="size-5 text-green-400" />
+                            ) : (
+                                <CircleDashed className="size-5 text-zinc-400" />
                             )}
                         </div>
                     )
                 })}
             </div>
-            <Button variant="secondary" size="full">
+            <Button onClick={openUpdateGuestsModalOpen} variant="secondary" size="full">
                 <UserCog className='size-5' />
                 Gerenciar convidados
             </Button>
+
+            {isUpdateGuestModalOpen && (
+                <UpdateGuestModal
+                    closeUpdateGuestsModalOpen={closeUpdateGuestsModalOpen}
+                />
+            )}
         </div>
     )
 }
